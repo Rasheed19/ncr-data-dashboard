@@ -4,10 +4,9 @@ from shinywidgets import output_widget, render_widget
 import pandas as pd
 from pathlib import Path
 
-
 from utils.processor import get_summary_data
 from utils.plotter import get_map, plot_top_ten, plot_gauge_chart, plot_accessibility
-from utils.helper_text import about_text, disclaimer_text, info_modal
+from utils.helper_text import about_text, disclaimer_text, info_modal, github_text
 
 DATA = pd.read_csv(
     Path().resolve() / "data" / "ncr_data_cleaned.csv",
@@ -107,6 +106,7 @@ app_ui = ui.page_navbar(
     sidebar=ui.sidebar(
         ui.card(about_text()),
         ui.card(disclaimer_text()),
+        ui.card(github_text()),
         width=400,
     ),
     title="UK EV CHARGEPOINTS",
