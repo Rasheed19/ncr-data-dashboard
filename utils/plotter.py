@@ -24,7 +24,7 @@ def plot_bar_chart(
 
 
 def plot_gauge_chart(value: int | float, title: str) -> go.Figure:
-    fig = go.Figure(
+    return go.Figure(
         go.Indicator(
             mode="gauge+number",
             value=value,
@@ -35,8 +35,6 @@ def plot_gauge_chart(value: int | float, title: str) -> go.Figure:
             },
         )
     )
-
-    return fig
 
 
 def plot_top_ten(top_ten: dict[str, pd.DataFrame]) -> go.Figure:

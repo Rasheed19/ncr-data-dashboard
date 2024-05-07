@@ -146,11 +146,7 @@ def server(input: Inputs, output: Outputs, session: Session):
     @reactive.calc
     @reactive.event(input.county)
     def _get_filtered_data() -> tuple[str, pd.DataFrame]:
-        if input.county() == "":
-            county: str = "Edinburgh"
-        else:
-            county = input.county()
-
+        county = "Edinburgh" if input.county() == "" else input.county()
         return county, DATA[DATA["County"] == county]
 
     @render.ui
