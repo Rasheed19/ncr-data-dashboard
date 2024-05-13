@@ -39,7 +39,7 @@ def github_text() -> ui.Tag:
         ui.h4("Cloan this dashboard"),
         ui.markdown(
             """
-            The source code for this dashboard can be foud in 
+            The source code for this dashboard can be found in 
             this [link](https://github.com/Rasheed19/ncr-data-dashboard). 
             Information about how to run the dashboard locally and how
             to deploy it to various platforms can also be found in the 
