@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 
-@dataclass
+@dataclass(frozen=True)
 class SummaryData:
     counties: list[str]
     total_chargers: int
