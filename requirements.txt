@@ -7,3 +7,5 @@ shinywidgets==0.3.2
 leafmap==0.31.9
 plotly==5.22.0
 rsconnect_python==1.23.0
+pytest==8.2.2
+pytest-cov
