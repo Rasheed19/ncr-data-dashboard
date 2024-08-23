@@ -1,9 +1,10 @@
-import requests
-import pandas as pd
 import io
 from pathlib import Path
 
-from .definitions import Definition
+import pandas as pd
+import requests
+
+from utils.definitions import Definition
 
 
 def load_csv_from_url(url: str) -> pd.DataFrame:
