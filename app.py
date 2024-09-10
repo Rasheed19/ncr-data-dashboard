@@ -1,12 +1,21 @@
-from shiny import App, Inputs, Outputs, Session, render, ui, reactive
-from faicons import icon_svg
-from shinywidgets import output_widget, render_widget
-import pandas as pd
 from pathlib import Path
 
+import pandas as pd
+from faicons import icon_svg
+from shiny import App, Inputs, Outputs, Session, reactive, render, ui
+from shinywidgets import output_widget, render_widget
+
+from utils.helper_text import (
+    about_text,
+    access_text,
+    disclaimer_text,
+    github_text,
+    info_modal,
+    map_text,
+    top_ten_text,
+)
+from utils.plotter import get_map, plot_accessibility, plot_top_ten
 from utils.processor import get_summary_data
-from utils.plotter import get_map, plot_top_ten, plot_gauge_chart, plot_accessibility
-from utils.helper_text import about_text, disclaimer_text, info_modal, github_text
 
 DATA = pd.read_csv(
     Path().resolve() / "data" / "ncr_data_cleaned.csv",
@@ -14,134 +23,121 @@ DATA = pd.read_csv(
 
 SUMMARY_DATA = get_summary_data(df=DATA)
 
-app_ui = ui.page_navbar(
-    ui.nav_panel(
-        "Overview",
-        ui.layout_column_wrap(
+page_dependencies = ui.head_content(ui.include_css("./www/style.css"))
+overview_ui = ui.nav_panel(
+    "Overview",
+    ui.layout_column_wrap(
+        *[
             ui.value_box(
-                "Total chargepoints",
-                SUMMARY_DATA.total_chargers,
-                showcase=icon_svg("plug"),
+                title,
+                value,
+                *tagchild,
+                showcase=icon_svg(icon),
+            )
+            for title, value, tagchild, icon in zip(
+                [
+                    "Total chargepoints",
+                    "In service",
+                    "County with the most chargepoints",
+                    "Payment not required",
+                    "Accessible all day",
+                ],
+                [
+                    f"{SUMMARY_DATA.total_chargers:,}",
+                    f"{SUMMARY_DATA.in_service_chargers:,}",
+                    SUMMARY_DATA.county_with_most_chargers,
+                    f"{SUMMARY_DATA.non_payment_chargers:,}",
+                    f"{SUMMARY_DATA.all_day_chargers:,}",
+                ],
+                [
+                    "",
+                    f"{(SUMMARY_DATA.in_service_chargers * 100 / SUMMARY_DATA.total_chargers):.2f}% of total chargepoints",
+                    "",
+                    f"{(SUMMARY_DATA.non_payment_chargers * 100 / SUMMARY_DATA.total_chargers):.2f}% of total chargepoints",
+                    f"{(SUMMARY_DATA.all_day_chargers * 100 / SUMMARY_DATA.total_chargers):.2f}% of total chargepoints",
+                ],
+                [
+                    "plug",
+                    "plug-circle-check",
+                    "flag",
+                    "money-check-dollar",
+                    "calendar-check",
+                ],
+            )
+        ],
+        fill=False,
+        height="250px",
+    ),
+    ui.card(
+        top_ten_text(),
+        output_widget("_top_ten"),
+    ),
+)
+
+county_ui = ui.nav_panel(
+    "UK county chargepoint information",
+    ui.tags.div(
+        ui.row(
+            ui.column(
+                2,
+                ui.input_selectize(
+                    "county",
+                    "Enter or select a UK county",
+                    choices=SUMMARY_DATA.counties,
+                    selected="Edinburgh",
+                    multiple=False,
+                    options=(
+                        {
+                            "placeholder": "Enter or select a county",
+                            "create": True,
+                        }
+                    ),
+                ),
+                ui.value_box(
+                    "Number of chargers",
+                    ui.output_text("_county_charger_count"),
+                    showcase=icon_svg("plug"),
+                ),
             ),
-            ui.card(output_widget("_inservice")),
-            ui.value_box(
-                "County with the most chargepoints",
-                SUMMARY_DATA.county_with_most_chargers,
-                showcase=icon_svg("flag"),
+            ui.column(
+                10,
+                ui.card(
+                    access_text(),
+                    output_widget("_accessibility"),
+                    height="360px",
+                ),
             ),
-            ui.card(output_widget("_payment_req")),
-            ui.card(output_widget("_all_day_access")),
-            fill=False,
-            height="250px",
         ),
         ui.card(
-            ui.card_header(
-                """
-                Bar charts of the top ten counties,
-                location types, device manufacturers,
-                owners, and controllers with the highest number of 
-                chargepoints in the UK. Hover on each 
-                bar to see the exact number of charge 
-                devices.
-                """
-            ),
-            output_widget("_top_ten"),
+            map_text(),
+            ui.output_ui("_map"),
         ),
     ),
-    ui.nav_panel(
-        "UK county chargepoint information",
-        ui.tags.div(
-            ui.row(
-                ui.column(
-                    2,
-                    ui.input_selectize(
-                        "county",
-                        "Enter or select a UK county",
-                        choices=SUMMARY_DATA.counties,
-                        selected="Edinburgh",
-                        multiple=False,
-                        options=(
-                            {
-                                "placeholder": "Enter or select a county",
-                                "create": True,
-                            }
-                        ),
-                    ),
-                    ui.value_box(
-                        "Number of chargers",
-                        ui.output_text("_county_charger_count"),
-                        showcase=icon_svg("plug"),
-                    ),
-                ),
-                ui.column(
-                    10,
-                    ui.card(
-                        ui.card_header(
-                            """
-                        The following plots show the percentage of chargepoints
-                        based on 24-hour accessibility, payment and subscription
-                        requirements. Hover on the charts to see the actual 
-                        number of chargepoints in each segment of the donut charts.
-                        """
-                        ),
-                        output_widget("_accessibility"),
-                        height="360px",
-                    ),
-                ),
-            ),
-            ui.card(
-                ui.card_header(
-                    """
-                Map of EV chargepoints in the UK as obtained from the
-                National Chargepoint Registry UK (NCR). Hover on the 
-                icon to see more information about each chargepoint. You
-                can activate the fullscreen mode by clicking on the disjointed
-                square icon.
-                """
-                ),
-                ui.output_ui("_map"),
-            ),
-        ),
-    ),
-    sidebar=ui.sidebar(
-        ui.card(about_text()),
-        ui.card(disclaimer_text()),
-        ui.card(github_text()),
-        width=400,
-    ),
+)
+
+sidebar = ui.sidebar(
+    ui.card(about_text()),
+    ui.card(disclaimer_text()),
+    ui.card(github_text()),
+    width=400,
+)
+
+app_ui = ui.page_navbar(
+    page_dependencies,
+    overview_ui,
+    county_ui,
+    sidebar=sidebar,
     title="UK EV CHARGEPOINTS",
     fillable=True,
 )
 
 
 def server(input: Inputs, output: Outputs, session: Session):
-
     info_modal()
 
     @render_widget
     def _top_ten():
         return plot_top_ten(top_ten=SUMMARY_DATA.top_ten)
-
-    @render_widget
-    def _inservice():
-        return plot_gauge_chart(
-            value=SUMMARY_DATA.in_service_chargers,
-            title="In service",
-        )
-
-    @render_widget
-    def _payment_req():
-        return plot_gauge_chart(
-            value=SUMMARY_DATA.non_payment_chargers,
-            title="Payment not required",
-        )
-
-    @render_widget
-    def _all_day_access():
-        return plot_gauge_chart(
-            value=SUMMARY_DATA.all_day_chargers,
-            title="Accessible all day",
-        )
 
     @reactive.calc
     @reactive.event(input.county)
