@@ -1,13 +1,13 @@
 import folium
-from folium import plugins
-import pandas as pd
 import leafmap.foliumap as leafmap
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from folium import plugins
 from plotly.subplots import make_subplots
 
-from .processor import get_column_value_counts
 from .definitions import Definition
+from .processor import get_column_value_counts
 
 
 def plot_bar_chart(
@@ -47,7 +47,6 @@ def plot_top_ten(top_ten: dict[str, pd.DataFrame]) -> go.Figure:
         top_ten.items(),
         start=1,
     ):
-
         fig.add_trace(
             go.Bar(
                 x=v[k].values,
@@ -62,7 +61,7 @@ def plot_top_ten(top_ten: dict[str, pd.DataFrame]) -> go.Figure:
 
         fig.update_xaxes(title_text=k, row=1, col=i, tickangle=-90)
         fig.update_yaxes(
-            title_text="Number of charge devices",
+            title_text="Chargepoint count",
             row=1,
             col=1,
         )
@@ -87,7 +86,6 @@ def plot_accessibility(df: pd.DataFrame):
         Definition.TAB_NAMES["Accessibility"],
         start=1,
     ):
-
         df_count = get_column_value_counts(
             df=df,
             column_name=k,
@@ -110,7 +108,6 @@ def plot_accessibility(df: pd.DataFrame):
 def get_map(
     df: pd.DataFrame,
 ) -> folium.Map:
-
     location_map = leafmap.Map(
         center=[df["Latitude"].mean(), df["Longitude"].mean()], zoom=10
     )
