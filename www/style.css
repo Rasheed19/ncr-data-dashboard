@@ -1,0 +1,4 @@
+.modal-dialog {
+margin-top: 20px !important;  /* Adjust this value as needed */
+overflow-y: hidden !important;
+}
