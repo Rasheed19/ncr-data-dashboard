@@ -8,4 +8,4 @@ leafmap==0.31.9
 plotly==5.22.0
 rsconnect-python==1.24.0
 pytest==8.2.2
-pytest-cov
+setuptools
