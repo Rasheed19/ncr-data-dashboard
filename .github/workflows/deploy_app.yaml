@@ -2,7 +2,9 @@ name: ncr-dashboard-deployer
 
 run-name: ${{ github.actor }} is deploying shiny app to shiny cloud
 
-on: workflow_dispatch
+on:
+  schedule:
+    - cron: "0 0 1 * *"
 
 jobs:
   build:
