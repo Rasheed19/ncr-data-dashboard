@@ -24,7 +24,9 @@ def disclaimer_text() -> ui.Tag:
             to the distribution of the chargepoints in the UK and not the exact
             figures**. **It is meant for educational purpose only and not to be used to make
             decisions**. It is believed that some chargepoints might not be logged to
-            the National Chargepoint Registry at the time of visiting this dashboard.
+            the National Chargepoint Registry at the time of visiting this dashboard. The
+            dataset is updated **MONTHLY** to reflect the current state of the  chargepoints
+            distribution in the UK.
 
             The dataset from the NCR have been cleaned to remove chargepoints
             without a unique identification number, those with missing counties and
