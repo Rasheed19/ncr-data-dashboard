@@ -4,6 +4,8 @@ An interactive dashboard built using shiny Python library. Check out the deploye
 ![Dashboard UI](assets/dashboard_ui.png)
 ![Dashboard UI](assets/dashboard_ui_2.png)
 
+>The National Chargepoint Registry will be decommissioned on 28th November 2024. Thus, the data behind this dashboard will no longer be updated from that date. Read more about these changes [here](https://www.cenex.co.uk/news/uuks-national-chargepoint-registry-managed-by-cenex-to-be-closed-down/).
+
 ## To run the app locally
 1. Clone the repository by running
     ```
@@ -13,7 +15,7 @@ An interactive dashboard built using shiny Python library. Check out the deploye
     ```
     python3 -m venv .venv
     source .venv/bin/activate
-    ``` 
+    ```
 1. Prepare all modules by running
     ```
     pip install -r requirements.txt

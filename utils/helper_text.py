@@ -20,13 +20,14 @@ def disclaimer_text() -> ui.Tag:
         ui.h4("Disclaimer"),
         ui.markdown(
             """
-            The information contained in this dashboard **should be taken as an indication
+            The information contained in this dashboard **_should be taken as an indication
             to the distribution of the chargepoints in the UK and not the exact
-            figures**. **It is meant for educational purpose only and not to be used to make
-            decisions**. It is believed that some chargepoints might not be logged to
-            the National Chargepoint Registry at the time of visiting this dashboard. The
-            dataset is updated **MONTHLY** to reflect the current state of the  chargepoints
-            distribution in the UK.
+            figures. It is meant for educational purpose only and not to be used to make
+            decisions_**.
+
+            **_The National Chargepoint Registry will be decommissioned on 28th November 2024.
+            Thus, the data behind this dashboard will no longer be updated from that date.
+            Read more about these changes [here](https://www.cenex.co.uk/news/uuks-national-chargepoint-registry-managed-by-cenex-to-be-closed-down/)_**.
 
             The dataset from the NCR have been cleaned to remove chargepoints
             without a unique identification number, those with missing counties and
