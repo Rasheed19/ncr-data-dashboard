@@ -9,3 +9,4 @@ plotly==5.22.0
 rsconnect-python==1.24.0
 pytest==8.2.2
 setuptools
+python-dotenv==1.2.1

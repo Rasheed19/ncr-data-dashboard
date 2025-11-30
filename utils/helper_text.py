@@ -39,7 +39,7 @@ def disclaimer_text() -> ui.Tag:
 
 def github_text() -> ui.Tag:
     return ui.tags.div(
-        ui.h4("Cloan this dashboard"),
+        ui.h4("Clone this dashboard"),
         ui.markdown(
             """
             The source code for this dashboard can be found in

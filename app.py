@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
 
 import pandas as pd
+from dotenv import load_dotenv
 from faicons import icon_svg
 from shiny import App, Inputs, Outputs, Session, reactive, render, ui
 from shinywidgets import output_widget, render_widget
@@ -17,13 +19,31 @@ from utils.helper_text import (
 from utils.plotter import get_map, plot_accessibility, plot_top_ten
 from utils.processor import get_summary_data
 
+load_dotenv()
+
 DATA = pd.read_csv(
     Path().resolve() / "data" / "ncr_data_cleaned.csv",
 )
 
 SUMMARY_DATA = get_summary_data(df=DATA)
 
-page_dependencies = ui.head_content(ui.include_css("./www/style.css"))
+page_dependencies = ui.head_content(
+    ui.HTML(
+        f"""
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={os.getenv("GA_ID")}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){{dataLayer.push(arguments);}}
+          gtag('js', new Date());
+
+          gtag('config', '{os.getenv("GA_ID")}');
+        </script>
+        """
+    ),
+    ui.include_css("./www/style.css"),
+)
+
 overview_ui = ui.nav_panel(
     "Overview",
     ui.layout_column_wrap(
