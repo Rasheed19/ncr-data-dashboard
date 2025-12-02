@@ -35,7 +35,7 @@ jobs:
       run: uv run tbx write-req --force-write
 
     - name: Configure rsconnect-python
-      run: rsconnect add --account ${{ secrets.ACCOUNT }} --name ${{ secrets.NAME }} --token ${{ secrets.TOKEN }} --secret ${{ secrets.SECRET }}
+      run: uv run rsconnect add --account ${{ secrets.ACCOUNT }} --name ${{ secrets.NAME }} --token ${{ secrets.TOKEN }} --secret ${{ secrets.SECRET }}
 
     - name: Deploy application to shiny cloud
-      run: rsconnect deploy shiny . --name ${{ secrets.NAME }} --title ncr-data-dashboard --app-id ${{ secrets.APP_FIRST_DEPLOYMENT_ID }}
+      run: uv run rsconnect deploy shiny . --name ${{ secrets.NAME }} --title ncr-data-dashboard --app-id ${{ secrets.APP_FIRST_DEPLOYMENT_ID }}
