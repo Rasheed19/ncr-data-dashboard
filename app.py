@@ -41,6 +41,24 @@ page_dependencies = ui.head_content(
         </script>
         """
     ),
+    ui.HTML(
+        """
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              const select = document.getElementById("county-label");
+              if (select) {
+                select.addEventListener("change", function() {
+                  gtag('event', 'dropdown_county_select', {
+                    action: 'selection_changed',
+                    label: select.id,
+                    value: select.value
+                  });
+                });
+              }
+            });
+        </script>
+        """
+    ),
     ui.include_css("./www/style.css"),
 )
 
