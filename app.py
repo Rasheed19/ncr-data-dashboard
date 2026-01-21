@@ -44,17 +44,11 @@ page_dependencies = ui.head_content(
     ui.HTML(
         """
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-              const select = document.getElementById("county-label");
-              if (select) {
-                select.addEventListener("change", function() {
-                  gtag('event', 'dropdown_county_select', {
-                    action: 'selection_changed',
-                    label: select.id,
-                    value: select.value
-                  });
-                });
-              }
+            $(document).on('change', 'select', function(e) {
+             gtag('event', 'widget', {
+                action: 'select data',
+                label: $(e.currentTarget).val()
+              });
             });
         </script>
         """
