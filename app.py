@@ -44,9 +44,9 @@ page_dependencies = ui.head_content(
     ui.HTML(
         """
         <script>
-            $(document).on('change', 'select', function(e) {
-             gtag('event', 'widget', {
-                action: 'select data',
+            $(document).on('change', '#county', function(e) {
+             gtag('event', 'county_selection', {
+                action: 'select county',
                 label: $(e.currentTarget).val()
               });
             });
